@@ -1,30 +1,27 @@
 // @todo: Темплейт карточки
-
 const card = document.querySelector('#card-template'); // template Карточки
 
 // @todo: DOM узлы
-
 const editProfile = document.querySelector('.profile__edit-button'); // Кнопка редактирования профиля
-const addButton = document.querySelector('.profile__add-button'); // Кнопка создания карточки
-const deleteButton = document.querySelectorAll('.card__delete-button'); // Кнопка удаления карточки
-const likeButton = document.querySelectorAll('.card__like-button'); // Кнопка лайка
 const popupEdit = document.querySelector('.popup_type_edit'); // popup редактирование
-const popupNew = document.querySelector('.popup_type_new-card'); // popup добавление карточек
-const list = document.querySelector('.places__list');
+const popupEditName = document.querySelector('.popup__input_type_name'); // input имя 
+const popupEditDesc = document.querySelector('.popup__input_type_description'); //input занятие
+const popupTitle = document.querySelector('.profile__title'); // Имя 
+const popupDesc = document.querySelector('.profile__description'); // Занятие
 const editForm = document.forms['edit-profile']; // Форма редактирования
+
+const addButton = document.querySelector('.profile__add-button'); // Кнопка создания карточки
 const createForm = document.forms['new-place']; // Форма создание
 const btnSave = createForm.querySelector('.popup__button'); // Кнопка сохранения
 const btnClose = document.querySelector('.popup__close'); // Кнопка закрытия
-
-const popupTitle = document.querySelector('.profile__title'); // Имя 
-const popupDesc = document.querySelector('.profile__description'); // Занятие
-
-const popupEditName = document.querySelector('.popup__input_type_name'); // input имя 
-const popupEditDesc = document.querySelector('.popup__input_type_description'); //input занятие
-
-
 const popupCreateName = document.querySelector('.popup__input_type_card-name'); // input name картинки
 const popupCreateUrl = document.querySelector('.popup__input_type_url'); // input url для картинки
+const popupNew = document.querySelector('.popup_type_new-card'); // popup добавление карточек
+const list = document.querySelector('.places__list');
+
+const deleteButton = document.querySelectorAll('.card__delete-button'); // Кнопка удаления карточки
+const likeButton = document.querySelectorAll('.card__like-button'); // Кнопка лайка
+
 
 // Вызов popup редактирования
 editProfile.addEventListener('click', () => {
