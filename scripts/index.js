@@ -7,7 +7,7 @@ const card = document.querySelector('#card-template'); // template Карточ�
 const editTitle = document.querySelector('.profile__title'); // Имя пользователя
 const editDesc = document.querySelector('.profile__description'); // Занятие пользователя
 
-const BtnEditProfile = document.querySelector('.profile__edit-button'); // Кнопка редактирования профиля
+const btnEditProfile = document.querySelector('.profile__edit-button'); // Кнопка редактирования профиля
 const popupInputEditName = document.querySelector('.popup__input_type_name'); // input имя пользователя
 const popupInputEditDesc = document.querySelector('.popup__input_type_description'); // input занятие пользователя
 
@@ -26,7 +26,7 @@ const popupInputNewCardTitle = document.querySelector('.popup__input_type_card-n
 const popupInputNewCardUrl = document.querySelector('.popup__input_type_url'); // input путь для картинки
 const createForm = document.forms['new-place']; // Форма создание картинки
 
-const list = document.querySelector('.places__list'); // Список карточек
+const listCards = document.querySelector('.places__list'); // Список карточек
 // const Создание карточки ===
 
 // Закрытие Popup
@@ -47,7 +47,7 @@ function clearInputCreate(clear) {
 }
 
 // Вызов popup редактирования
-BtnEditProfile.addEventListener('click', () => {
+btnEditProfile.addEventListener('click', () => {
   popupEdit.classList.add('popup__open');
 });
 
@@ -85,9 +85,9 @@ createForm.addEventListener('submit', (event) => {
   const cloneCard = createCard(
     popupInputNewCardUrl.value,
     popupInputNewCardTitle.value,
-    delitedCard
+    deleteCard
   );
-  list.prepend(cloneCard);
+  listCards.prepend(cloneCard);
   clearInput(popupInputNewCardTitle);
   clearInputCreate();
   popupNewCard.classList.remove('popup__open');
@@ -106,19 +106,20 @@ function createCard(url, title, removeHandler) {
     .addEventListener('click', () => {
       removeHandler(cloneCard);
     });
-
+  
   cloneCard.querySelector('.card__image').src = url;
   cloneCard.querySelector('.card__title').textContent = title;
+  cloneCard.querySelector('.card__image').alt = `Фотография места: ${title}`;
   return cloneCard;
 }
 
 // @todo: Функция удаления карточки
-function delitedCard(cloneCard) {
+function deleteCard(cloneCard) {
   cloneCard.remove();
 }
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function (item) {
-  const cloneCard = createCard(item.link, item.name, delitedCard);
-  list.append(cloneCard);
+  const cloneCard = createCard(item.link, item.name, deleteCard);
+  listCards.append(cloneCard);
 });
