@@ -1,3 +1,6 @@
+import './pages/index.css';
+import {initialCards} from './components/card.js'
+
 // @todo: Темплейт карточки
 const card = document.querySelector('#card-template'); // template Карточки
 
@@ -9,7 +12,9 @@ const editDesc = document.querySelector('.profile__description'); // Занят�
 
 const btnEditProfile = document.querySelector('.profile__edit-button'); // Кнопка редактирования профиля
 const popupInputEditName = document.querySelector('.popup__input_type_name'); // input имя пользователя
-const popupInputEditDesc = document.querySelector('.popup__input_type_description'); // input занятие пользователя
+const popupInputEditDesc = document.querySelector(
+  '.popup__input_type_description'
+); // input занятие пользователя
 
 const popupEdit = document.querySelector('.popup_type_edit'); // Popup редактирование профиля
 const popupBtnEditClose = popupEdit.querySelector('.popup__close'); // Кнопка закрытия Popup редактирование профиля
@@ -22,7 +27,9 @@ const addBtn = document.querySelector('.profile__add-button'); // Кнопка �
 const popupNewCard = document.querySelector('.popup_type_new-card'); // Popup добавление карточек
 const popupBtnCreateClose = popupNewCard.querySelector('.popup__close'); // Кнопка закрытия Popup создания карточки
 
-const popupInputNewCardTitle = document.querySelector('.popup__input_type_card-name'); // input название картинки
+const popupInputNewCardTitle = document.querySelector(
+  '.popup__input_type_card-name'
+); // input название картинки
 const popupInputNewCardUrl = document.querySelector('.popup__input_type_url'); // input путь для картинки
 const createForm = document.forms['new-place']; // Форма создание картинки
 
@@ -106,7 +113,7 @@ function createCard(url, title, removeHandler) {
     .addEventListener('click', () => {
       removeHandler(cloneCard);
     });
-  
+
   cloneCard.querySelector('.card__image').src = url;
   cloneCard.querySelector('.card__title').textContent = title;
   cloneCard.querySelector('.card__image').alt = `Фотография места: ${title}`;
