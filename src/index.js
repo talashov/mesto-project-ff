@@ -78,11 +78,6 @@ function clearInputCreate(clear) {
   popupInputNewCardUrl.value = '';
 }
 
-// Вызов popup редактирования
-btnEditProfile.addEventListener('click', () => {
-  popupEdit.classList.add('popup__open');
-  document.addEventListener('keydown', handleEscClose);
-});
 
 // Вызов popup добавления карточки
 addBtn.addEventListener('click', () => {
@@ -90,15 +85,6 @@ addBtn.addEventListener('click', () => {
   document.addEventListener('keydown', handleEscClose);
 });
 
-// Функция редактирования профиля
-editForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  editTitle.textContent = `${popupInputEditName.value}`;
-  editDesc.textContent = `${popupInputEditDesc.value}`;
-  clearInput();
-
-  popupEdit.classList.remove('popup__open');
-});
 
 // @todo: Функция создания карточки
 createForm.addEventListener('submit', (event) => {
@@ -141,3 +127,27 @@ initialCards.forEach(function (item) {
   const cloneCard = createCard(item.link, item.name, deleteCard);
   listCards.append(cloneCard);
 });
+
+
+
+// Вызов popup редактирования
+btnEditProfile.addEventListener('click', () => {
+  inputEdit()
+  popupEdit.classList.add('popup__open');
+  document.addEventListener('keydown', handleEscClose);
+});
+
+// Функция редактирования профиля
+editForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  editTitle.textContent = `${popupInputEditName.value}`;
+  editDesc.textContent = `${popupInputEditDesc.value}`;
+  clearInput();
+  popupEdit.classList.remove('popup__open');
+});
+
+// Функция которая заполняет input
+function inputEdit(){
+  popupInputEditName.value = editTitle.textContent;
+  popupInputEditDesc.value = editDesc.textContent;
+}

@@ -1,4 +1,4 @@
 // @todo: Функция удаления карточки
-export const deleteCard = (cloneCard) => {
+export function deleteCard(cloneCard) {
   cloneCard.remove();
 }
