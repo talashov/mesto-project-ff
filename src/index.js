@@ -1,5 +1,7 @@
+// imports
 import './pages/index.css';
-import {initialCards} from './components/card.js'
+import {initialCards} from './components/cards.js'
+import {deleteCard} from './components/card.js'
 
 // @todo: Темплейт карточки
 const card = document.querySelector('#card-template'); // template Карточки
@@ -37,9 +39,32 @@ const listCards = document.querySelector('.places__list'); // Список ка�
 // const Создание карточки ===
 
 // Закрытие Popup
-function closePopup(popup) {
+function closePopup(popup){
   popup.classList.remove('popup__open');
+  document.removeEventListener('keydown', handleEscClose);
 }
+
+// Функция для обработки нажатия Esc
+export function handleEscClose(event) {
+  if (event.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup__open');
+    if (openedPopup) {
+      closePopup(openedPopup);
+    }
+  } 
+}
+
+// Закрытие popup редактирования
+popupBtnEditClose.addEventListener('click', () => {
+  clearInput();
+  closePopup(popupEdit);
+});
+
+// Закрытие popup Добавления карточки
+popupBtnCreateClose.addEventListener('click', () => {
+  closePopup(popupNewCard);
+});
+
 
 // Очистка input у редактирования профиля
 function clearInput(clear) {
@@ -56,22 +81,13 @@ function clearInputCreate(clear) {
 // Вызов popup редактирования
 btnEditProfile.addEventListener('click', () => {
   popupEdit.classList.add('popup__open');
+  document.addEventListener('keydown', handleEscClose);
 });
 
 // Вызов popup добавления карточки
 addBtn.addEventListener('click', () => {
   popupNewCard.classList.add('popup__open');
-});
-
-// Закрытие popup редактирования
-popupBtnEditClose.addEventListener('click', () => {
-  clearInput();
-  closePopup(popupEdit);
-});
-
-// Закрытие popup Добавления карточки
-popupBtnCreateClose.addEventListener('click', () => {
-  closePopup(popupNewCard);
+  document.addEventListener('keydown', handleEscClose);
 });
 
 // Функция редактирования профиля
@@ -118,11 +134,6 @@ function createCard(url, title, removeHandler) {
   cloneCard.querySelector('.card__title').textContent = title;
   cloneCard.querySelector('.card__image').alt = `Фотография места: ${title}`;
   return cloneCard;
-}
-
-// @todo: Функция удаления карточки
-function deleteCard(cloneCard) {
-  cloneCard.remove();
 }
 
 // @todo: Вывести карточки на страницу
