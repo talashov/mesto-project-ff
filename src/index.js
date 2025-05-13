@@ -1,13 +1,19 @@
 // imports
 import './pages/index.css';
-import {initialCards} from './components/cards.js'
-import {deleteCard} from './components/card.js'
+import { initialCards } from './components/cards.js';
+import { deleteCard, renderInitialCards } from './components/card.js';
+import {
+  handleEscClose,
+  closePopup,
+  openPopup,
+  handleOver,
+  openCard,
+} from './components/modal.js';
 
 // @todo: Темплейт карточки
 const card = document.querySelector('#card-template'); // template Карточки
 
 // @todo: DOM узлы
-
 // === const Профиль
 const editTitle = document.querySelector('.profile__title'); // Имя пользователя
 const editDesc = document.querySelector('.profile__description'); // Занятие пользователя
@@ -38,53 +44,53 @@ const createForm = document.forms['new-place']; // Форма создание �
 const listCards = document.querySelector('.places__list'); // Список карточек
 // const Создание карточки ===
 
-// Закрытие Popup
-function closePopup(popup){
-  popup.classList.remove('popup__open');
-  document.removeEventListener('keydown', handleEscClose);
-}
+// Попапы
+// const profileEditPopup = document.querySelector('.popup_type_edit');
+// const cardAddPopup = document.querySelector('.popup_type_new-card');
+// const imagePopup = document.querySelector('.popup_type_image');
 
-// Функция для обработки нажатия Esc
-export function handleEscClose(event) {
-  if (event.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup__open');
-    if (openedPopup) {
-      closePopup(openedPopup);
-    }
-  } 
-}
+// Вывести все карточки
+renderInitialCards(initialCards, createCard, listCards, deleteCard);
+
+// Вызов popup редактирования
+btnEditProfile.addEventListener('click', () => {
+  inputEdit();
+  openPopup(popupEdit);
+});
 
 // Закрытие popup редактирования
 popupBtnEditClose.addEventListener('click', () => {
-  clearInput();
   closePopup(popupEdit);
+});
+
+// Вызов popup добавления карточки
+addBtn.addEventListener('click', () => {
+  openPopup(popupNewCard);
 });
 
 // Закрытие popup Добавления карточки
 popupBtnCreateClose.addEventListener('click', () => {
   closePopup(popupNewCard);
+  clearInputCreate();
 });
 
+popupEdit.addEventListener('mousedown', handleOver);
 
-// Очистка input у редактирования профиля
-function clearInput(clear) {
-  popupInputEditName.value = '';
-  popupInputEditDesc.value = '';
-}
+popupNewCard.addEventListener('mousedown', handleOver);
 
-// Очистка input у создания карточки
-function clearInputCreate(clear) {
-  popupInputNewCardTitle.value = '';
-  popupInputNewCardUrl.value = '';
-}
-
-
-// Вызов popup добавления карточки
-addBtn.addEventListener('click', () => {
-  popupNewCard.classList.add('popup__open');
-  document.addEventListener('keydown', handleEscClose);
+// Функция редактирования профиля
+editForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  editTitle.textContent = `${popupInputEditName.value}`;
+  editDesc.textContent = `${popupInputEditDesc.value}`;
+  closePopup(popupEdit);
 });
 
+// Функция которая заполняет input редактирования профиля
+function inputEdit() {
+  popupInputEditName.value = editTitle.textContent;
+  popupInputEditDesc.value = editDesc.textContent;
+}
 
 // @todo: Функция создания карточки
 createForm.addEventListener('submit', (event) => {
@@ -97,9 +103,8 @@ createForm.addEventListener('submit', (event) => {
     deleteCard
   );
   listCards.prepend(cloneCard);
-  clearInput(popupInputNewCardTitle);
   clearInputCreate();
-  popupNewCard.classList.remove('popup__open');
+  closePopup(popupNewCard);
 });
 
 function createCard(url, title, removeHandler) {
@@ -119,35 +124,12 @@ function createCard(url, title, removeHandler) {
   cloneCard.querySelector('.card__image').src = url;
   cloneCard.querySelector('.card__title').textContent = title;
   cloneCard.querySelector('.card__image').alt = `Фотография места: ${title}`;
+  openCard(cloneCard);
   return cloneCard;
 }
 
-// @todo: Вывести карточки на страницу
-initialCards.forEach(function (item) {
-  const cloneCard = createCard(item.link, item.name, deleteCard);
-  listCards.append(cloneCard);
-});
-
-
-
-// Вызов popup редактирования
-btnEditProfile.addEventListener('click', () => {
-  inputEdit()
-  popupEdit.classList.add('popup__open');
-  document.addEventListener('keydown', handleEscClose);
-});
-
-// Функция редактирования профиля
-editForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  editTitle.textContent = `${popupInputEditName.value}`;
-  editDesc.textContent = `${popupInputEditDesc.value}`;
-  clearInput();
-  popupEdit.classList.remove('popup__open');
-});
-
-// Функция которая заполняет input
-function inputEdit(){
-  popupInputEditName.value = editTitle.textContent;
-  popupInputEditDesc.value = editDesc.textContent;
+// Очистка input у создания карточки
+function clearInputCreate() {
+  popupInputNewCardTitle.value = '';
+  popupInputNewCardUrl.value = '';
 }
