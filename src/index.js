@@ -6,7 +6,7 @@ import {
   handleEscClose,
   closePopup,
   openPopup,
-  handleOver,
+  handleOverlayClick,
   openCard,
 } from './components/modal.js';
 
@@ -74,9 +74,9 @@ popupBtnCreateClose.addEventListener('click', () => {
   clearInputCreate();
 });
 
-popupEdit.addEventListener('mousedown', handleOver);
+popupEdit.addEventListener('mousedown', handleOverlayClick);
 
-popupNewCard.addEventListener('mousedown', handleOver);
+popupNewCard.addEventListener('mousedown', handleOverlayClick);
 
 // Функция редактирования профиля
 editForm.addEventListener('submit', (event) => {

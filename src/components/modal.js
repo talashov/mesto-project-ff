@@ -21,7 +21,7 @@ export function handleEscClose(event) {
 }
 
 // Закрытие по оверлейну РЕДАКТИРОВАНИЕ
-export function handleOver(event) {
+export function handleOverlayClick(event) {
   if (event.target.classList.contains('popup')) {
     closePopup(event.target);
   }
