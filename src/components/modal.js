@@ -1,12 +1,12 @@
 // Открытие Popup
-export function openPopup(popup) {
-  popup.classList.add('popup_is-opened');
+export function openPopup(popupWindow) {
+  popupWindow.classList.add('popup_is-opened');
   document.addEventListener('keydown', handleEscClose);
 }
 
 // Закрытие Popup
-export function closePopup(popup) {
-  popup.classList.remove('popup_is-opened');
+export function closePopup(popupWindow) {
+  popupWindow.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', handleEscClose);
 }
 
@@ -20,7 +20,7 @@ export function handleEscClose(event) {
   }
 }
 
-// Закрытие по оверлейну РЕДАКТИРОВАНИЕ
+// Закрытие по оверлейну
 export function handleOverlayClick(event) {
   if (event.target.classList.contains('popup')) {
     closePopup(event.target);
@@ -30,32 +30,29 @@ export function handleOverlayClick(event) {
 // Открытие изображения
 export function openCard(card) {
   const cardImage = card.querySelector('.card__image');
-  const popup = document.querySelector('.popup_type_image');
-  const popupImage = popup.querySelector('.popup__image');
-  const popupCaption = popup.querySelector('.popup__caption');
-  const popupClose = popup.querySelector('.popup__close');
+  const popupWindow = document.querySelector('.popup_type_image');
+  const popupImage = popupWindow.querySelector('.popup__image');
+  const popupCaptionImage = popupWindow.querySelector('.popup__caption');
+  const buttonClosePopupImage = popupWindow.querySelector('.popup__close');
 
   cardImage.addEventListener('click', () => {
     // Устанавливаем изображение и подпись в попап
     popupImage.src = cardImage.src;
     popupImage.alt = cardImage.alt;
-    popupCaption.textContent = card.querySelector('.card__title').textContent;
-
+    popupCaptionImage.textContent = card.querySelector('.card__title').textContent;
+    
     // Показываем попап
-    openPopup(popup);
-  });
-  console.log(popupClose);
-  // Закрытие попапа по кнопке
-  popupClose.addEventListener('click', () => {
-    popup.classList.remove('popup_is-opened');
+    openPopup(popupWindow);
   });
 
-  // Закрытие попапа по клику на оверлей
-  popup.addEventListener('click', (e) => {
-    if (e.target === popup) {
-      popup.classList.remove('popup_is-opened');
-    }
+  // Закрытие попапа по кнопке
+  buttonClosePopupImage.addEventListener('click', () => {
+    closePopup(popupWindow);
   });
+  
+  // Закрытие попапа по клику на оверлей
+  popupWindow.addEventListener('mousedown', handleOverlayClick);
+
 }
 
 document.addEventListener('keydown', (event) => {

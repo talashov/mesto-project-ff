@@ -1,7 +1,7 @@
 // imports
 import './pages/index.css';
 import { initialCards } from './components/cards.js';
-import { deleteCard, renderInitialCards } from './components/card.js';
+import { deleteCard } from './components/card.js';
 import {
   handleEscClose,
   closePopup,
@@ -47,6 +47,14 @@ const listCards = document.querySelector('.places__list'); // Список ка�
 
 // Вывести все карточки
 renderInitialCards(initialCards, createCard, listCards, deleteCard);
+
+// @todo: Вывести карточки на страницу
+function renderInitialCards(initialCards, createCard, listCards, deleteCard) {
+  initialCards.forEach(function (item) {
+    const cloneCard = createCard(item.link, item.name, deleteCard);
+    listCards.append(cloneCard);
+  });
+}
 
 // Вызов popup редактирования
 buttonEditProfile.addEventListener('click', () => {
