@@ -1,7 +1,7 @@
 // imports
 import './pages/index.css';
 import { initialCards } from './components/cards.js';
-import { deleteCard } from './components/card.js';
+import { deleteCard, toggleLike } from './components/card.js';
 import {
   handleEscClose,
   closePopup,
@@ -75,7 +75,6 @@ buttonOpenPopupCreateNewCard.addEventListener('click', () => {
 // Закрытие popup Добавления карточки
 buttonClosePopupCreateNewCard.addEventListener('click', () => {
   closePopup(popupNewCard);
-  clearInputCreate();
 });
 
 popupEdit.addEventListener('mousedown', handleOverlayClick);
@@ -107,24 +106,16 @@ formCreateCard.addEventListener('submit', (event) => {
     deleteCard
   );
   listCards.prepend(cloneCard);
-  clearInputCreate();
+  formCreateCard.reset()// Очистка input у создания карточки
   closePopup(popupNewCard);
 });
-
-// Очистка input у создания карточки
-function clearInputCreate() {
-  popupInputNewCardTitle.value = '';
-  popupInputNewCardUrl.value = '';
-}
 
 // Функция созадния карточки
 function createCard(url, title, removeHandler) {
   const cloneCard = card.content.querySelector('.card').cloneNode(true);
   const likeBtn = cloneCard.querySelector('.card__like-button');
-
-  likeBtn.addEventListener('click', () => {
-    likeBtn.classList.toggle('card__like-button_is-active');
-  });
+  
+  likeBtn.addEventListener('click', toggleLike);
 
   cloneCard
     .querySelector('.card__delete-button')
