@@ -27,34 +27,3 @@ export function handleOverlayClick(event) {
   }
 }
 
-// Открытие изображения
-export function openCard(card) {
-  const cardImage = card.querySelector('.card__image');
-  const popupWindow = document.querySelector('.popup_type_image');
-  const popupImage = popupWindow.querySelector('.popup__image');
-  const popupCaptionImage = popupWindow.querySelector('.popup__caption');
-  const buttonClosePopupImage = popupWindow.querySelector('.popup__close');
-
-  cardImage.addEventListener('click', () => {
-    // Устанавливаем изображение и подпись в попап
-    popupImage.src = cardImage.src;
-    popupImage.alt = cardImage.alt;
-    popupCaptionImage.textContent = card.querySelector('.card__title').textContent;
-    
-    // Показываем попап
-    openPopup(popupWindow);
-  });
-
-  // Закрытие попапа по кнопке
-  buttonClosePopupImage.addEventListener('click', () => {
-    closePopup(popupWindow);
-  });
-  
-  // Закрытие попапа по клику на оверлей
-  popupWindow.addEventListener('mousedown', handleOverlayClick);
-
-}
-
-document.addEventListener('keydown', (event) => {
-  handleEscClose(event);
-});
