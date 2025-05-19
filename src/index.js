@@ -1,7 +1,7 @@
 // imports
 import './pages/index.css';
 import { initialCards } from './components/cards.js';
-import { deleteCard, toggleLike } from './components/card.js';
+import { deleteCard, toggleLike, createCard } from './components/card.js';
 import {
   handleEscClose,
   closePopup,
@@ -44,13 +44,14 @@ const listCards = document.querySelector('.places__list'); // Список ка�
 // const popupNewCard = document.querySelector('.popup_type_new-card');
 // const popupImage = document.querySelector('.popup_type_image');
 
+
 // Вывести все карточки
 renderInitialCards(initialCards, createCard, listCards, deleteCard);
 
 // @todo: Вывести карточки на страницу
 function renderInitialCards(initialCards, createCard, listCards, deleteCard) {
   initialCards.forEach(function (item) {
-    const cloneCard = createCard(item.link, item.name, deleteCard);
+    const cloneCard = createCard(item.link, item.name, deleteCard, openImagePopup, card, toggleLike);
     listCards.append(cloneCard);
   });
 }
@@ -102,62 +103,38 @@ formCreateCard.addEventListener('submit', (event) => {
   const cloneCard = createCard(
     popupInputNewCardUrl.value,
     popupInputNewCardTitle.value,
-    deleteCard
+    deleteCard,
+    openImagePopup,
+    card,
+    toggleLike
   );
   listCards.prepend(cloneCard);
   formCreateCard.reset()// Очистка input у создания карточки
   closePopup(popupNewCard);
 });
 
-// Функция созадния карточки
-function createCard(url, title, removeHandler) {
-  const cloneCard = card.content.querySelector('.card').cloneNode(true);
-  const likeBtn = cloneCard.querySelector('.card__like-button');
-  
-  
-  const cardImage = cloneCard.querySelector('.card__image')
 
-  likeBtn.addEventListener('click', toggleLike);
 
-  cloneCard
-    .querySelector('.card__delete-button')
-    .addEventListener('click', () => {
-      removeHandler(cloneCard);
-    });
+const popupWindow = document.querySelector('.popup_type_image');
+const popupImage = popupWindow.querySelector('.popup__image');
+const popupCaptionImage = popupWindow.querySelector('.popup__caption');
+const buttonClosePopupImage = popupWindow.querySelector('.popup__close');
 
-  cardImage.src = url;
-  cardImage.alt = `Фотография места: ${title}`;
-  cloneCard.querySelector('.card__title').textContent = title;
+// Закрытие попапа по кнопке
+buttonClosePopupImage.addEventListener('click', () => {
+  closePopup(popupWindow);
+});
 
-  cardImage.addEventListener('click', () => {
-    openCard(cloneCard);
-  });
-  
-  return cloneCard;
-}
+// Закрытие попапа по клику на оверлей
+popupWindow.addEventListener('mousedown', handleOverlayClick);
 
 // Открытие изображения
-function openCard(card) {
-  const cardImage = card.querySelector('.card__image');
-  const popupWindow = document.querySelector('.popup_type_image');
-  const popupImage = popupWindow.querySelector('.popup__image');
-  const popupCaptionImage = popupWindow.querySelector('.popup__caption');
-  const buttonClosePopupImage = popupWindow.querySelector('.popup__close');
-
-      // Устанавливаем изображение и подпись в попап
-    popupImage.src = cardImage.src;
-    popupImage.alt = cardImage.alt;
-    popupCaptionImage.textContent = card.querySelector('.card__title').textContent;
-    
-    // Показываем попап
-    openPopup(popupWindow);
-
-  // Закрытие попапа по кнопке
-  buttonClosePopupImage.addEventListener('click', () => {
-    closePopup(popupWindow);
-  });
+function openImagePopup(url, alt, title) {
+  // Устанавливаем изображение и подпись в попап
+  popupImage.src = url;
+  popupImage.alt = alt;
+  popupCaptionImage.textContent = title;
   
-  // Закрытие попапа по клику на оверлей
-  popupWindow.addEventListener('mousedown', handleOverlayClick);
-
+  // Показываем попап
+  openPopup(popupWindow);
 }
