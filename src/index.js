@@ -115,26 +115,26 @@ formCreateCard.addEventListener('submit', (event) => {
 
 
 
-const popupWindow = document.querySelector('.popup_type_image');
-const popupImage = popupWindow.querySelector('.popup__image');
-const popupCaptionImage = popupWindow.querySelector('.popup__caption');
-const buttonClosePopupImage = popupWindow.querySelector('.popup__close');
+const popupFullImage = document.querySelector('.popup_type_image');
+const photoPopupFullImage = popupFullImage.querySelector('.popup__image');
+const popupCaptionImage = popupFullImage.querySelector('.popup__caption');
+const buttonClosePopupImage = popupFullImage.querySelector('.popup__close');
 
 // Закрытие попапа по кнопке
 buttonClosePopupImage.addEventListener('click', () => {
-  closePopup(popupWindow);
+  closePopup(popupFullImage);
 });
 
 // Закрытие попапа по клику на оверлей
-popupWindow.addEventListener('mousedown', handleOverlayClick);
+popupFullImage.addEventListener('mousedown', handleOverlayClick);
 
 // Открытие изображения
 function openImagePopup(url, alt, title) {
   // Устанавливаем изображение и подпись в попап
-  popupImage.src = url;
-  popupImage.alt = alt;
+  photoPopupFullImage.src = url;
+  photoPopupFullImage.alt = alt;
   popupCaptionImage.textContent = title;
   
   // Показываем попап
-  openPopup(popupWindow);
+  openPopup(popupFullImage);
 }
