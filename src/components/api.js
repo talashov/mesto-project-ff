@@ -12,6 +12,71 @@ export function getCards() {
 
     })
         .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}
+
+export function saveCard(body) {
+    console.log(body)
+    return fetch(`${url}v1/${idGroup}/cards`, {
+        method: 'POST',
+        headers: {
+            authorization: token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+        .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}
+
+export function removeCard(cardId) {
+    return fetch(`${url}v1/${idGroup}/cards/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: token,
+        },
+    })
+        .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}
+
+// Лайк для карточки
+export function likeCard(cardId) {
+    return fetch(`${url}v1/${idGroup}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: {
+            authorization: token,
+        },
+    })
+        .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}
+
+// Убрать лайк у карточки
+export function removelikeCard(cardId) {
+    return fetch(`${url}v1/${idGroup}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: {
+            authorization: token,
+        },
+    })
+        .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
 // 
@@ -27,6 +92,10 @@ export function editUser(body) {
 
     })
         .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
 //
@@ -38,6 +107,10 @@ export function getUser() {
         },
     })
         .then(res => res.json())
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
 }
 
 //
@@ -52,4 +125,8 @@ export function editAvatar(body) {
 
     })
         .then(res => res.json())
-}
+
+        .catch((err) => {
+            console.log(err); // выводим ошибку в консоль
+        });
+}   

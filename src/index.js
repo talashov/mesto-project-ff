@@ -1,10 +1,10 @@
 // imports
 import './pages/index.css';
-import { initialCards } from './components/cards.js';
+// import { initialCards } from './components/cards.js';
 import { deleteCard, toggleLike, createCard } from './components/card.js';
 import { handleEscClose, closePopup, openPopup, handleOverlayClick } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
-import { getCards, getUser, editUser, editAvatar } from './components/api.js';
+import { getCards, getUser, editUser, editAvatar, saveCard, likeCard, removelikeCard } from './components/api.js';
 
 // @todo: DOM узлы
 const card = document.querySelector('#card-template'); // template Карточки
@@ -43,18 +43,7 @@ const photoPopupFullImage = popupFullImage.querySelector('.popup__image'); // И
 const popupCaptionImage = popupFullImage.querySelector('.popup__caption'); // Название изображения в popup
 const buttonClosePopupImage = popupFullImage.querySelector('.popup__close'); // Кнопка закрытия открытого изображения
 
-
-renderInitialCards(initialCards, createCard, listCards, deleteCard); // Вывести все карточки
 enableValidation();
-
-// @todo: Вывести карточки на страницу
-async function renderInitialCards(initialCards, createCard, listCards, deleteCard) {
-  initialCards.forEach(function (item) {
-    const cloneCard = createCard(item.link, item.name, deleteCard, openImagePopup, card, toggleLike);
-    listCards.append(cloneCard);
-    // const cards = await getCards()
-  });
-}
 
 // Вызов popup редактирования
 buttonEditProfile.addEventListener('click', () => {
@@ -148,22 +137,38 @@ formEditAvatar.addEventListener('submit', async (event) => {
 });
 
 // @todo: Функция создания карточки
-formCreateCard.addEventListener('submit', (event) => {
+formCreateCard.addEventListener('submit', async (event) => {
   event.preventDefault();
-  popupInputNewCardTitle.value;
-  popupInputNewCardUrl.value;
+  const button = formCreateCard.querySelector('.popup__button');
+  button.textContent = 'Сохранение...'
+  const savedCard = await saveCard({
+    name: popupInputNewCardTitle.value,
+    link: popupInputNewCardUrl.value
+  })
   const cloneCard = createCard(
-    popupInputNewCardUrl.value,
-    popupInputNewCardTitle.value,
+    savedCard._id,
+    savedCard.link,
+    savedCard.name,
     deleteCard,
     openImagePopup,
     card,
     toggleLike
   );
+  button.textContent = 'Сохранить'
   listCards.prepend(cloneCard);
   formCreateCard.reset()// Очистка input у создания карточки
   closePopup(popupNewCard);
 });
+
+// @todo: Вывести карточки на страницу
+async function renderInitialCards(createCard, listCards, deleteCard, idUser) {
+  const cards = await getCards()
+  cards.forEach(function (item) {
+    const cloneCard = createCard(item._id, item.link, item.name, deleteCard, openImagePopup, card, toggleLike, idUser, item.owner._id, item.likes);
+    listCards.append(cloneCard);
+    
+  });
+}
 
 // Инициализация пользователя
 async function initUser() {
@@ -171,6 +176,12 @@ async function initUser() {
   editTitle.textContent = user.name;
   editDescription.textContent = user.about;
   profileImage.style.backgroundImage = `url(${user.avatar})`;
-
+  return user._id
 }
-initUser()
+
+async function initData() {
+  const idUser = await initUser()
+  renderInitialCards(createCard, listCards, deleteCard, idUser); // Вывести все карточки
+}
+
+initData()

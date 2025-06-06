@@ -27,9 +27,9 @@
 }
 
 .card__like-number {
-  display: none;
-}
-
-.card__like-number-active {
   display: flex;
 }
+
+/* .card__like-number-active {
+  display: flex;
+} */
