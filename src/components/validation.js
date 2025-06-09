@@ -1,3 +1,4 @@
+// Функция показывает ошибку
 const showInputError = (formElement, inputElement, errorMessage) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
@@ -27,18 +28,13 @@ const toggleButtonState = (inputList, buttonElement) => {
 
 const isValid = (formElement, inputElement) => {
     if (inputElement.validity.patternMismatch) {
-        // встроенный метод setCustomValidity принимает на вход строку
-        // и заменяет ею стандартное сообщение об ошибке
-        inputElement.setCustomValidity("Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
+        const customMessage = inputElement.dataset.error || 'Некорректный ввод';
+        inputElement.setCustomValidity(customMessage);
     } else {
-        // если передать пустую строку, то будут доступны
-        // стандартные браузерные сообщения
-        inputElement.setCustomValidity("");
+        inputElement.setCustomValidity('');
     }
 
     if (!inputElement.validity.valid) {
-        // теперь, если ошибка вызвана регулярным выражением,
-        // переменная validationMessage хранит наше кастомное сообщение
         showInputError(formElement, inputElement, inputElement.validationMessage);
     } else {
         hideInputError(formElement, inputElement);
@@ -88,3 +84,13 @@ export const clearValidation = () => {
             })
     })
 }
+
+
+// enableValidation({
+//   formSelector: '.popup__form',
+//   inputSelector: '.popup__input',
+//   submitButtonSelector: '.popup__button',
+//   inactiveButtonClass: 'popup__button_disabled',
+//   inputErrorClass: 'popup__input_type_error',
+//   errorClass: 'form__input-error_active'
+// }); 

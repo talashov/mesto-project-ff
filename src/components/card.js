@@ -28,22 +28,26 @@ export function createCard(id, url, title, removeHandler, openImagePopup, card, 
     }
   })
 
-  likeBtn.addEventListener('click', async (event) => {
+  likeBtn.addEventListener('click', async () => {
     const isLiked = likesToggle.some((item) => {
-      console.log(item, idUser)
       return idUser === item._id
     })
-    if (!isLiked) {
-      const likedCard = await likeCard(id)
-      likesToggle = likedCard.likes
-      like.textContent = likedCard.likes.length
-    } else {
-      const likedCard = await removelikeCard(id)
-      likesToggle = likedCard.likes
-      like.textContent = likedCard.likes.length
-    }
 
-    likeBtn.classList.toggle('card__like-button_is-active');
+    try {
+      if (!isLiked) {
+        const likedCard = await likeCard(id)
+        likesToggle = likedCard.likes
+        like.textContent = likedCard.likes.length
+      } else {
+        const likedCard = await removelikeCard(id)
+        likesToggle = likedCard.likes
+        like.textContent = likedCard.likes.length
+      }
+
+      likeBtn.classList.toggle('card__like-button_is-active');
+    } catch {
+      alert('Ошибка сервера')
+    }
   });
 
   const removeButton = cloneCard.querySelector('.card__delete-button')
@@ -53,8 +57,12 @@ export function createCard(id, url, title, removeHandler, openImagePopup, card, 
   }
 
   removeButton.addEventListener('click', async () => {
-    await removeCard(id)
-    removeHandler(cloneCard);
+    try {
+      await removeCard(id)
+      removeHandler(cloneCard);
+    } catch {
+      alert('Не удалось удалить')
+    }
   });
 
   cardImage.src = url;

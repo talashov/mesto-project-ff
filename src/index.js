@@ -4,7 +4,7 @@ import './pages/index.css';
 import { deleteCard, toggleLike, createCard } from './components/card.js';
 import { handleEscClose, closePopup, openPopup, handleOverlayClick } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
-import { getCards, getUser, editUser, editAvatar, saveCard, likeCard, removelikeCard } from './components/api.js';
+import { getCards, getUser, editUser, editAvatar, saveCard, likeCard, removelikeCard, } from './components/api.js';
 
 // @todo: DOM узлы
 const card = document.querySelector('#card-template'); // template Карточки
@@ -55,12 +55,13 @@ buttonEditProfile.addEventListener('click', () => {
 // Закрытие popup редактирования
 buttonClosePopupEdit.addEventListener('click', () => {
   closePopup(popupEdit);
-  enableValidation()
 });
 
 // Вызов popup добавления карточки
 buttonOpenPopupCreateNewCard.addEventListener('click', () => {
   openPopup(popupNewCard);
+  popupInputNewCardTitle.value = ''
+  popupInputNewCardUrl.value = ''
   clearValidation()
 });
 
@@ -101,19 +102,32 @@ popupFullImage.addEventListener('mousedown', handleOverlayClick); // Закры�
 
 popupEditAvatar.addEventListener('mousedown', handleOverlayClick); // Закрытие попапа по клику на оверлей обновления фотографии пользователя
 
+// Утилитарная функция для управления состоянием кнопки во время загрузки
+const handleButtonState = (button, { disabled = false, text }) => {
+  button.disabled = disabled;
+  if (text) button.textContent = text;
+};
+
+
 // Функция редактирования профиля
 formEditProfile.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = formEditProfile.querySelector('.popup__button');
-  button.textContent = 'Сохранение...'
-  const userEdit = await editUser({
-    name: popupInputEditName.value,
-    about: popupInputEditDescription.value
-  })
-  button.textContent = 'Сохранить'
-  editTitle.textContent = userEdit.name;
-  editDescription.textContent = userEdit.about;
-  closePopup(popupEdit);
+
+  try {
+    handleButtonState(button, { disabled: true, text: 'Сохранение...' }); //состояние "Сохраненеие..."
+    const userEdit = await editUser({
+      name: popupInputEditName.value,
+      about: popupInputEditDescription.value
+    })
+    editTitle.textContent = userEdit.name;
+    editDescription.textContent = userEdit.about;
+  } catch {
+    alert('Ошибка редоктирования профиля')
+  } finally {
+    handleButtonState(button, { disabled: false, text: 'Сохранить' });
+    closePopup(popupEdit);
+  }
 });
 
 // Функция которая заполняет input редактирования профиля
@@ -126,47 +140,62 @@ function handleInputEdit() {
 formEditAvatar.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = formEditAvatar.querySelector('.popup__button');
-  button.textContent = 'Сохранение...'
-  const userEditAvatar = await editAvatar({
-    avatar: popupInputEditAvatar.value,
 
-  })
-  button.textContent = 'Сохранить'
-  profileImage.style.backgroundImage = `url(${userEditAvatar.avatar})`;
-  closePopup(popupEditAvatar);
+  try {
+    handleButtonState(button, { disabled: true, text: 'Сохранение...' }); //состояние "Сохраненеие..."
+    const userEditAvatar = await editAvatar({
+      avatar: popupInputEditAvatar.value,
+    })
+    profileImage.style.backgroundImage = `url(${userEditAvatar.avatar})`;
+  } catch {
+    alert('Не удалось сохранить аватарку')
+  } finally {
+    handleButtonState(button, { disabled: false, text: 'Сохранить' });
+    closePopup(popupEditAvatar);
+  }
+
 });
 
 // @todo: Функция создания карточки
 formCreateCard.addEventListener('submit', async (event) => {
   event.preventDefault();
   const button = formCreateCard.querySelector('.popup__button');
-  button.textContent = 'Сохранение...'
-  const savedCard = await saveCard({
-    name: popupInputNewCardTitle.value,
-    link: popupInputNewCardUrl.value
-  })
-  const cloneCard = createCard(
-    savedCard._id,
-    savedCard.link,
-    savedCard.name,
-    deleteCard,
-    openImagePopup,
-    card,
-    toggleLike
-  );
-  button.textContent = 'Сохранить'
-  listCards.prepend(cloneCard);
-  formCreateCard.reset()// Очистка input у создания карточки
-  closePopup(popupNewCard);
+
+  try {
+    handleButtonState(button, { disabled: true, text: 'Сохранение...' }); //состояние "Сохраненеие..."
+
+    const savedCard = await saveCard({
+      name: popupInputNewCardTitle.value,
+      link: popupInputNewCardUrl.value
+    })
+    const cloneCard = createCard(
+      savedCard._id,
+      savedCard.link,
+      savedCard.name,
+      deleteCard,
+      openImagePopup,
+      card,
+      toggleLike,
+      savedCard.owner._id,
+      savedCard.owner._id
+    );
+    listCards.prepend(cloneCard);
+
+  } catch {
+    alert('Не удалось сохранить карточку')
+  } finally {
+    handleButtonState(button, { disabled: false, text: 'Сохранить' });
+    formCreateCard.reset()// Очистка input у создания карточки
+    closePopup(popupNewCard);
+  }
 });
 
 // @todo: Вывести карточки на страницу
-async function renderInitialCards(createCard, listCards, deleteCard, idUser) {
-  const cards = await getCards()
+async function renderInitialCards(cards, createCard, listCards, deleteCard, idUser) {
   cards.forEach(function (item) {
     const cloneCard = createCard(item._id, item.link, item.name, deleteCard, openImagePopup, card, toggleLike, idUser, item.owner._id, item.likes);
     listCards.append(cloneCard);
-    
+
   });
 }
 
@@ -180,8 +209,13 @@ async function initUser() {
 }
 
 async function initData() {
-  const idUser = await initUser()
-  renderInitialCards(createCard, listCards, deleteCard, idUser); // Вывести все карточки
+  try {
+    const [idUser, cards] = await Promise.all([initUser(), getCards()]);
+    renderInitialCards(cards, createCard, listCards, deleteCard, idUser); // Вывести все карточки
+  } catch {
+    alert('Не удалось загрузить карточки и информацию о профиле')
+  }
+
 }
 
 initData()
