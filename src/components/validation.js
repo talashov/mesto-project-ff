@@ -79,18 +79,13 @@ export const clearValidation = () => {
 
         formList.forEach((formElement) => {
             const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+            const buttonElement = formElement.querySelector('.popup__button');
             inputList.forEach((input) => {
                 hideInputError(formElement, input);
             })
+            if (buttonElement) {
+            buttonElement.disabled = true;
+            buttonElement.classList.add('popup__button_disabled');
+        }
     })
 }
-
-
-// enableValidation({
-//   formSelector: '.popup__form',
-//   inputSelector: '.popup__input',
-//   submitButtonSelector: '.popup__button',
-//   inactiveButtonClass: 'popup__button_disabled',
-//   inputErrorClass: 'popup__input_type_error',
-//   errorClass: 'form__input-error_active'
-// }); 

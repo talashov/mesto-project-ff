@@ -122,11 +122,11 @@ formEditProfile.addEventListener('submit', async (event) => {
     })
     editTitle.textContent = userEdit.name;
     editDescription.textContent = userEdit.about;
+    closePopup(popupEdit);
   } catch {
     alert('Ошибка редоктирования профиля')
   } finally {
     handleButtonState(button, { disabled: false, text: 'Сохранить' });
-    closePopup(popupEdit);
   }
 });
 
@@ -147,11 +147,11 @@ formEditAvatar.addEventListener('submit', async (event) => {
       avatar: popupInputEditAvatar.value,
     })
     profileImage.style.backgroundImage = `url(${userEditAvatar.avatar})`;
+    closePopup(popupEditAvatar);
   } catch {
     alert('Не удалось сохранить аватарку')
   } finally {
     handleButtonState(button, { disabled: false, text: 'Сохранить' });
-    closePopup(popupEditAvatar);
   }
 
 });
@@ -180,13 +180,12 @@ formCreateCard.addEventListener('submit', async (event) => {
       savedCard.owner._id
     );
     listCards.prepend(cloneCard);
-
+    formCreateCard.reset()// Очистка input у создания карточки
+    closePopup(popupNewCard);
   } catch {
     alert('Не удалось сохранить карточку')
   } finally {
     handleButtonState(button, { disabled: false, text: 'Сохранить' });
-    formCreateCard.reset()// Очистка input у создания карточки
-    closePopup(popupNewCard);
   }
 });
 
@@ -195,7 +194,6 @@ async function renderInitialCards(cards, createCard, listCards, deleteCard, idUs
   cards.forEach(function (item) {
     const cloneCard = createCard(item._id, item.link, item.name, deleteCard, openImagePopup, card, toggleLike, idUser, item.owner._id, item.likes);
     listCards.append(cloneCard);
-
   });
 }
 
