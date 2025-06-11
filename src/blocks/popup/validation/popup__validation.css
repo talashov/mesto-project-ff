@@ -9,7 +9,7 @@
     border-bottom: 1px solid #f00;
 }
 
-.popup__error_visible {}
+/* .popup__error_visible {} */
 
 .form__input-error {
     display: none;

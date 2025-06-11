@@ -43,13 +43,34 @@ const photoPopupFullImage = popupFullImage.querySelector('.popup__image'); // И
 const popupCaptionImage = popupFullImage.querySelector('.popup__caption'); // Название изображения в popup
 const buttonClosePopupImage = popupFullImage.querySelector('.popup__close'); // Кнопка закрытия открытого изображения
 
-enableValidation();
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'form__input-error_active',
+};
+
+enableValidation(validationConfig);
+
+// enableValidation({
+//   formSelector: '.popup__form',
+//   inputSelector: '.popup__input',
+//   submitButtonSelector: '.popup__button',
+//   inactiveButtonClass: 'popup__button_disabled',
+//   inputErrorClass: 'popup__input_type_error',
+//   errorClass: 'popup__error_visible'
+// }); 
 
 // Вызов popup редактирования
 buttonEditProfile.addEventListener('click', () => {
   handleInputEdit();
   openPopup(popupEdit);
-  clearValidation()
+  clearValidation(validationConfig)
 });
 
 // Закрытие popup редактирования
@@ -62,7 +83,7 @@ buttonOpenPopupCreateNewCard.addEventListener('click', () => {
   openPopup(popupNewCard);
   popupInputNewCardTitle.value = ''
   popupInputNewCardUrl.value = ''
-  clearValidation()
+  clearValidation(validationConfig)
 });
 
 // Закрытие popup Добавления карточки
@@ -73,7 +94,7 @@ buttonClosePopupCreateNewCard.addEventListener('click', () => {
 // Вызов popup обновления аватарки
 profileImage.addEventListener('click', () => {
   openPopup(popupEditAvatar);
-  clearValidation()
+  clearValidation(validationConfig)
 });
 
 // Закрытие popup обновления аватарки
